@@ -1,0 +1,31 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo 'Styling, testing and building your project before commiting'
+# Check tsconfig standards
+npm run check-types ||
+(
+  echo 'Failed TypeScript check. Make the changes required above'
+  false;
+)
+# Check Prettier standards
+npm run check-format ||
+(
+  echo 'Failed Prettier check. Make the changes required above'
+  false;
+)
+# Check ESlint standards
+npm run check-lint ||
+(
+  echo 'Failed ESlint check. Make the changes required above'
+  false;
+)
+# If everything passes... try to run a build
+echo 'TypeScript, ESlint and Prettier are Ok, starting build'
+npm run build ||
+(
+  echo 'Error in the building process, view errors above and see why'
+  false;
+)
+# If it builds we can commit
+echo 'Build complete, commiting now'
